@@ -11,7 +11,8 @@ import java.sql.Timestamp;
 
 public interface IDatabaseOperations {
     UserLoginResponse userLogin(UserLoginRequest userLoginRequest);
-    ChatHistory lastTenMessages(String timestamp);
-    ChatMessageReceived chatMessageReceived(String nickname, String message, String email, Timestamp timestamp);
+    ChatHistory lastTenMessages(Timestamp timestamp);
+    ChatHistory[] fullHistory();
+    ChatMessageReceived chatMessageReceived(String nickname, String message, String email);
     UserRegisterResponse userRegisterResponse(UserRegisterRequest userRegisterRequest);
 }

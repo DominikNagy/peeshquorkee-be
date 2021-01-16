@@ -35,7 +35,6 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         try {
             connection.close();
         } catch (SQLException throwables) {
@@ -45,12 +44,44 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
     }
 
     @Override
-    public ChatHistory lastTenMessages(String timestamp) {
+    public ChatHistory lastTenMessages(Timestamp timestamp) {
         return null;
     }
 
     @Override
-    public ChatMessageReceived chatMessageReceived(String nickname, String message, String email, Timestamp timestamp) {
+    public ChatHistory[] fullHistory() {
+        String select = "SELECT chat.timestamp, chat.nickname, chat.email, chat.message, avatar\n" +
+                "FROM chat INNER JOIN users u on chat.email = u.email\n" +
+                "ORDER BY timestamp";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(select,
+                    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.last();
+            ChatHistory[] chatHistories = new ChatHistory[resultSet.getRow()];
+            resultSet.beforeFirst();
+            int i = 0;
+            while (resultSet.next()) {
+                chatHistories[i] = new ChatHistory(
+                        resultSet.getTimestamp("timestamp"),
+                        resultSet.getString("nickname"),
+                        resultSet.getString("message"),
+                        resultSet.getString("email"));
+
+                i += 1;
+            }
+
+            return chatHistories;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public ChatMessageReceived chatMessageReceived(String nickname, String message, String email) {
         return null;
     }
 
@@ -66,13 +97,25 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
         try {
             Statement statement = connection.createStatement();
             int resultSet = statement.executeUpdate(post);
+            connection.close();
             return new UserRegisterResponse("Success.");
         } catch (SQLException throwables) {
             if (throwables.getErrorCode() == 0) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 return new UserRegisterResponse("User already exists.");
             }
-            else
+            else {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 return new UserRegisterResponse("Something went wrong.");
+            }
         }
     }
 }

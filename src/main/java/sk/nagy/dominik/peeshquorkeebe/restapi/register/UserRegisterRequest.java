@@ -1,7 +1,5 @@
 package sk.nagy.dominik.peeshquorkeebe.restapi.register;
 
-import java.sql.Timestamp;
-
 public class UserRegisterRequest {
     private String nickname;
     private String email;

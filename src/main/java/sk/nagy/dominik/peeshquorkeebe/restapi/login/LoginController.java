@@ -12,5 +12,4 @@ public class LoginController {
         DatabaseOperations databaseOperations = new DatabaseOperations();
         return databaseOperations.userLogin(userLoginRequest);
     }
-
 }
