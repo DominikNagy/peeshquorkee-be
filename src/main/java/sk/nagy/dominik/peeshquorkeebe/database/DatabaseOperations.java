@@ -18,7 +18,7 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
         connection = databaseConnection.getConnection();
     }
 
-    // POST(/userLogin)
+    // POST (/userLogin)
     // in: email, password
     // out: * except pass
     @Override
@@ -44,10 +44,42 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
     }
 
     @Override
-    public ChatHistory lastTenMessages(Timestamp timestamp) {
+    public ChatHistory[] lastTenMessages(Timestamp timestamp) {
+        String select = "SELECT chat.timestamp, chat.nickname, chat.email, chat.message, avatar\n" +
+                "FROM chat INNER JOIN users u on chat.email = u.email\n" +
+                "WHERE chat.timestamp < to_timestamp('" +timestamp.toString()+ "', 'YYYY-MM-DD HH24:MI:SS')\n" +
+                "ORDER BY timestamp DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(select,
+                    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.last();
+            ChatHistory[] chatHistories = new ChatHistory[resultSet.getRow()];
+            resultSet.beforeFirst();
+            int i = 0;
+            while (resultSet.next()) {
+                chatHistories[i] = new ChatHistory(
+                        resultSet.getTimestamp("timestamp"),
+                        resultSet.getString("nickname"),
+                        resultSet.getString("message"),
+                        resultSet.getString("email"));
+                i += 1;
+            }
+
+            return chatHistories;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
         return null;
     }
 
+
+    // GET (/chatHistoryFull)
+    // in ~
+    // out: full chat history
     @Override
     public ChatHistory[] fullHistory() {
         String select = "SELECT chat.timestamp, chat.nickname, chat.email, chat.message, avatar\n" +
@@ -68,7 +100,6 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
                         resultSet.getString("nickname"),
                         resultSet.getString("message"),
                         resultSet.getString("email"));
-
                 i += 1;
             }
 
@@ -85,7 +116,7 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
         return null;
     }
 
-    // POST(/userLogin)
+    // POST (/userLogin)
     // in: email, password
     // out: * except pass
     @Override

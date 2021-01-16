@@ -10,9 +10,9 @@ public class ChatController {
 
     @CrossOrigin(originPatterns = "*")
     @PostMapping(path = "/chatHistory", consumes = "application/json", produces = "application/json")
-    public ChatHistory chatHistory(@RequestBody Timestamp timestamp) {
+    public ChatHistory[] chatHistory(@RequestBody ChatHistoryRequest chatHistoryRequest) {
         DatabaseOperations databaseOperations = new DatabaseOperations();
-        return databaseOperations.lastTenMessages(timestamp);
+        return databaseOperations.lastTenMessages(chatHistoryRequest.getTimestamp());
     }
 
     @CrossOrigin(originPatterns = "*")
