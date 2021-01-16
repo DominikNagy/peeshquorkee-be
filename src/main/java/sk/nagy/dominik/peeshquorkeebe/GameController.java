@@ -1,13 +1,22 @@
 package sk.nagy.dominik.peeshquorkeebe;
 
+import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-@Controller
+
+
 public class GameController {
     List<String> currentBoard = new ArrayList<>();
     String playerOne = "";
@@ -18,11 +27,12 @@ public class GameController {
     int playerTurn = 1;
 
     @MessageMapping("/startGame")
-    @SendTo("/topic/gameStatus")
+    @SendToUser("/queue/gameStatus")
     public String answerWithClearBoard(PlayerIN email) {
 
         if (playerOne.isEmpty()) {
             playerOne = email.getEmail();
+
             return "Player1 connected > " + email.getEmail();
         } else if (playerTwo.isEmpty()) {
             playerTwo = email.getEmail();
@@ -34,8 +44,18 @@ public class GameController {
             return "Game already in progress";
     }
 
+//    @MessageMapping("/startGame")
+//    public void test(Message<Object> message, @Payload PlayerIN chatMessage) {
+//        Principal principal = message.getHeaders().get(SimpMessageHeaderAccessor.USER_HEADER, Principal.class);
+//        assert principal != null;
+//        String authedSender = principal.getName();
+//        System.out.println(authedSender);
+//        STOMPConnectEventListener stompConnectEventListener = new STOMPConnectEventListener();
+//
+//    }
+
     @MessageMapping("/endGame")
-    @SendTo("/topic/gameStatus")
+    @SendToUser("/queue/gameStatus")
     public String endGame(PlayerIN message) {
         System.out.println("Game ended!");
         clearBoard();
