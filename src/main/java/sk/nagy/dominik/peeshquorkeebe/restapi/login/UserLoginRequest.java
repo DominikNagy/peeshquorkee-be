@@ -3,7 +3,7 @@ package sk.nagy.dominik.peeshquorkeebe.restapi.login;
 // REST API user-login-request
 // to db
 
-public class UserRequest {
+public class UserLoginRequest {
     private String email;
     // md5 hash
     private String password;

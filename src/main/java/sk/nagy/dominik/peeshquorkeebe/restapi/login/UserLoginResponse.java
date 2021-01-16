@@ -3,13 +3,25 @@ package sk.nagy.dominik.peeshquorkeebe.restapi.login;
 // REST API user-login-response
 // from db
 
-public class UserResponse {
+public class UserLoginResponse {
     // not a response from db (Registered, Not Registered)
     private String user;
     private String userId;
     private String nickname;
     private String email;
     private String avatar;
+
+    public UserLoginResponse(String user, String userId, String nickname, String email, String avatar) {
+        this.user = user;
+        this.userId = userId;
+        this.nickname = nickname;
+        this.email = email;
+        this.avatar = avatar;
+    }
+
+    public UserLoginResponse(String user) {
+        this.user = user;
+    }
 
     public String getUser() {
         return user;

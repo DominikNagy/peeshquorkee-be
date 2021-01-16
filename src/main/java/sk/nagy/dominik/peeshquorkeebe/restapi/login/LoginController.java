@@ -1,16 +1,16 @@
 package sk.nagy.dominik.peeshquorkeebe.restapi.login;
 
 import org.springframework.web.bind.annotation.*;
+import sk.nagy.dominik.peeshquorkeebe.database.DatabaseOperations;
 
 @RestController
 public class LoginController {
 
     @CrossOrigin(originPatterns = "*")
-    @PostMapping("/userLogin")
-    public UserResponse userResponse() {
-        UserResponse userResponse = new UserResponse();
-
-        return userResponse;
+    @PostMapping(path = "/userLogin", consumes = "application/json", produces = "application/json")
+    public UserLoginResponse userResponse(@RequestBody UserLoginRequest userLoginRequest) {
+        DatabaseOperations databaseOperations = new DatabaseOperations();
+        return databaseOperations.userLogin(userLoginRequest);
     }
 
 }
