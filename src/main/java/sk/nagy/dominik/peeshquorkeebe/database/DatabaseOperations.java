@@ -66,10 +66,13 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
         try {
             Statement statement = connection.createStatement();
             int resultSet = statement.executeUpdate(post);
-            System.out.println(resultSet);
             return new UserRegisterResponse("Success.");
         } catch (SQLException throwables) {
-            return new UserRegisterResponse("User already exists.");
+            if (throwables.getErrorCode() == 0) {
+                return new UserRegisterResponse("User already exists.");
+            }
+            else
+                return new UserRegisterResponse("Something went wrong.");
         }
     }
 }
