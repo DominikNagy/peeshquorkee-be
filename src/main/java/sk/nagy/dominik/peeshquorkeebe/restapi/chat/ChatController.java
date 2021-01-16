@@ -3,8 +3,6 @@ package sk.nagy.dominik.peeshquorkeebe.restapi.chat;
 import org.springframework.web.bind.annotation.*;
 import sk.nagy.dominik.peeshquorkeebe.database.DatabaseOperations;
 
-import java.sql.Timestamp;
-
 @RestController
 public class ChatController {
 

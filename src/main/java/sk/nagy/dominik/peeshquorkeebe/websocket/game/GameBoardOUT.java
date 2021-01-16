@@ -1,4 +1,4 @@
-package sk.nagy.dominik.peeshquorkeebe;
+package sk.nagy.dominik.peeshquorkeebe.websocket.game;
 
 import java.util.List;
 

@@ -31,8 +31,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        System.out.println("kekw");
         registry.addEndpoint("/game")
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
+
+        registry.addEndpoint("/chat")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
     }

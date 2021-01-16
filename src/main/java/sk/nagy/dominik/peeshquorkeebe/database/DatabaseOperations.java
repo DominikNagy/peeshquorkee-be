@@ -51,24 +51,7 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
                 "ORDER BY timestamp DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY";
 
         try {
-            PreparedStatement statement = connection.prepareStatement(select,
-                    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.last();
-            ChatHistory[] chatHistories = new ChatHistory[resultSet.getRow()];
-            resultSet.beforeFirst();
-            int i = 0;
-            while (resultSet.next()) {
-                chatHistories[i] = new ChatHistory(
-                        resultSet.getTimestamp("timestamp"),
-                        resultSet.getString("nickname"),
-                        resultSet.getString("message"),
-                        resultSet.getString("email"));
-                i += 1;
-            }
-
-            return chatHistories;
+            return selectChat(select);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -87,32 +70,58 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
                 "ORDER BY timestamp";
 
         try {
-            PreparedStatement statement = connection.prepareStatement(select,
-                    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.last();
-            ChatHistory[] chatHistories = new ChatHistory[resultSet.getRow()];
-            resultSet.beforeFirst();
-            int i = 0;
-            while (resultSet.next()) {
-                chatHistories[i] = new ChatHistory(
-                        resultSet.getTimestamp("timestamp"),
-                        resultSet.getString("nickname"),
-                        resultSet.getString("message"),
-                        resultSet.getString("email"));
-                i += 1;
-            }
-
+            //selectChat(select);
+            ChatHistory[] chatHistories = selectChat(select);
+            connection.close();
             return chatHistories;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
+        try {
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return null;
     }
 
+    private ChatHistory[] selectChat(String select) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(select,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.last();
+        ChatHistory[] chatHistories = new ChatHistory[resultSet.getRow()];
+        resultSet.beforeFirst();
+        int i = 0;
+        while (resultSet.next()) {
+            chatHistories[i] = new ChatHistory(
+                    resultSet.getTimestamp("timestamp"),
+                    resultSet.getString("nickname"),
+                    resultSet.getString("message"),
+                    resultSet.getString("email"));
+            i += 1;
+        }
+
+        return chatHistories;
+    }
+
+    // on new message this method is called
+    // inserts new messages to chat table
     @Override
     public ChatMessageReceived chatMessageReceived(String nickname, String message, String email) {
+        String insert = "INSERT INTO chat (nickname, message, email) \n" +
+                "VALUES ('" +nickname+ "', '" +message+ "', '" +email+ "') ";
+
+        try {
+            Statement statement = connection.createStatement();
+            int resultSet = statement.executeUpdate(insert);
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
         return null;
     }
 
@@ -121,13 +130,13 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
     // out: * except pass
     @Override
     public UserRegisterResponse userRegisterResponse(UserRegisterRequest userRegisterRequest) {
-        String post = "INSERT INTO users (nickname, email, password, avatar) " +
+        String insert = "INSERT INTO users (nickname, email, password, avatar) " +
                 "VALUES ('" +userRegisterRequest.getNickname()+ "', '" +userRegisterRequest.getEmail()+ "', '"
                 +userRegisterRequest.getPassword()+ "', '" +userRegisterRequest.getAvatar()+ "')";
 
         try {
             Statement statement = connection.createStatement();
-            int resultSet = statement.executeUpdate(post);
+            int resultSet = statement.executeUpdate(insert);
             connection.close();
             return new UserRegisterResponse("Success.");
         } catch (SQLException throwables) {
