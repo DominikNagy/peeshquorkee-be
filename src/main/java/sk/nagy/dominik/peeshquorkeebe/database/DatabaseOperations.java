@@ -54,8 +54,22 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
         return null;
     }
 
+    // POST(/userLogin)
+    // in: email, password
+    // out: * except pass
     @Override
     public UserRegisterResponse userRegisterResponse(UserRegisterRequest userRegisterRequest) {
-        return null;
+        String post = "INSERT INTO users (nickname, email, password, avatar) " +
+                "VALUES ('" +userRegisterRequest.getNickname()+ "', '" +userRegisterRequest.getEmail()+ "', '"
+                +userRegisterRequest.getPassword()+ "', '" +userRegisterRequest.getAvatar()+ "')";
+
+        try {
+            Statement statement = connection.createStatement();
+            int resultSet = statement.executeUpdate(post);
+            System.out.println(resultSet);
+            return new UserRegisterResponse("Success.");
+        } catch (SQLException throwables) {
+            return new UserRegisterResponse("User already exists.");
+        }
     }
 }
