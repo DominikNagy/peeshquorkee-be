@@ -2,11 +2,12 @@ package sk.nagy.dominik.peeshquorkeebe.websocket.game;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Controller
 public class WSGameController {
     List<String> currentBoard = new ArrayList<>();
     String playerOne = "";
@@ -19,7 +20,6 @@ public class WSGameController {
     @MessageMapping("/startGame")
     @SendTo("/topic/gameStatus")
     public String answerWithClearBoard(PlayerIN email) {
-
         if (playerOne.isEmpty()) {
             playerOne = email.getEmail();
 
@@ -33,16 +33,6 @@ public class WSGameController {
         } else
             return "Game already in progress";
     }
-
-//    @MessageMapping("/startGame")
-//    public void test(Message<Object> message, @Payload PlayerIN chatMessage) {
-//        Principal principal = message.getHeaders().get(SimpMessageHeaderAccessor.USER_HEADER, Principal.class);
-//        assert principal != null;
-//        String authedSender = principal.getName();
-//        System.out.println(authedSender);
-//        STOMPConnectEventListener stompConnectEventListener = new STOMPConnectEventListener();
-//
-//    }
 
     @MessageMapping("/endGame")
     @SendTo("/topic/gameStatus")
@@ -58,6 +48,7 @@ public class WSGameController {
     @MessageMapping("/playGame")
     @SendTo("/topic/gameStatus")
     public GameBoardOUT answerMessage(PlayerIN message) throws Exception {
+        System.out.println("started playing game.");
         if (gameInProgress) {
             if (message.getEmail().equals(playerOne) && playerTurn == 1) {
                 addMoveToBoard(message.getMove(), PLAYER_ONE_SYMBOL);
