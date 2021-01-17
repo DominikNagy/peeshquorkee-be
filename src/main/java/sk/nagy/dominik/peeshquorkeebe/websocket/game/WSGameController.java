@@ -55,7 +55,7 @@ public class WSGameController {
                 playerTurn = 2;
                 if (isTheGameWon(PLAYER_ONE_SYMBOL)) {
                     currentBoard.set(0, "win_playerOne");
-//                    endGame(message);
+                    endGame(message);
                     return new GameBoardOUT(currentBoard);
                 }
             } else if (message.getEmail().equals(playerTwo) && playerTurn == 2) {
@@ -63,7 +63,7 @@ public class WSGameController {
                 playerTurn = 1;
                 if (isTheGameWon(PLAYER_TWO_SYMBOL)) {
                     currentBoard.set(0, "win_playerTwo");
-//                    endGame(message);
+                    endGame(message);
                     return new GameBoardOUT(currentBoard);
                 }
             }
