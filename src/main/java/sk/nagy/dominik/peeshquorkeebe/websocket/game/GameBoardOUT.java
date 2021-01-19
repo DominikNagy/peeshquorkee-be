@@ -3,6 +3,8 @@ package sk.nagy.dominik.peeshquorkeebe.websocket.game;
 import java.util.List;
 
 public class GameBoardOUT {
+    private boolean winner;
+    private String winnerNick;
     private String f00;
     private String f01;
     private String f02;
@@ -16,7 +18,7 @@ public class GameBoardOUT {
     public GameBoardOUT() {
     }
 
-    public GameBoardOUT(List<String> currentBoard) {
+    public GameBoardOUT(List<String> currentBoard, boolean winner, String winnerNick) {
         this.f00 = currentBoard.get(0);
         this.f01 = currentBoard.get(1);
         this.f02 = currentBoard.get(2);
@@ -26,6 +28,8 @@ public class GameBoardOUT {
         this.f20 = currentBoard.get(6);
         this.f21 = currentBoard.get(7);
         this.f22 = currentBoard.get(8);
+        this.winner = winner;
+        this.winnerNick = winnerNick;
     }
 
     public GameBoardOUT(String f00, String f01, String f02, String f10, String f11, String f12, String f20, String f21, String f22) {
@@ -38,6 +42,22 @@ public class GameBoardOUT {
         this.f20 = f20;
         this.f21 = f21;
         this.f22 = f22;
+    }
+
+    public boolean isWinner() {
+        return winner;
+    }
+
+    public void setWinner(boolean winner) {
+        this.winner = winner;
+    }
+
+    public String getWinnerNick() {
+        return winnerNick;
+    }
+
+    public void setWinnerNick(String winnerNick) {
+        this.winnerNick = winnerNick;
     }
 
     public void setF00(String f00) {

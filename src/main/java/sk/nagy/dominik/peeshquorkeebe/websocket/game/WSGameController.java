@@ -42,6 +42,8 @@ public class WSGameController {
         playerOne = "";
         playerTwo = "";
         playerTurn = 1;
+        gameInProgress = false;
+
         return "Game ended.";
     }
 
@@ -56,7 +58,7 @@ public class WSGameController {
                 if (isTheGameWon(PLAYER_ONE_SYMBOL)) {
                     currentBoard.set(0, "win_playerOne");
                     endGame(message);
-                    return new GameBoardOUT(currentBoard);
+                    return new GameBoardOUT(currentBoard, true, playerOne);
                 }
             } else if (message.getEmail().equals(playerTwo) && playerTurn == 2) {
                 addMoveToBoard(message.getMove(), PLAYER_TWO_SYMBOL);
@@ -64,12 +66,12 @@ public class WSGameController {
                 if (isTheGameWon(PLAYER_TWO_SYMBOL)) {
                     currentBoard.set(0, "win_playerTwo");
                     endGame(message);
-                    return new GameBoardOUT(currentBoard);
+                    return new GameBoardOUT(currentBoard, true, playerOne);
                 }
             }
         }
 
-        return new GameBoardOUT(currentBoard);
+        return new GameBoardOUT(currentBoard, false, "");
     }
 
     private boolean isTheGameWon(String symbol) {
