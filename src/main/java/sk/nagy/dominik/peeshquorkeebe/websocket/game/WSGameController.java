@@ -22,7 +22,6 @@ public class WSGameController {
     public String answerWithClearBoard(PlayerIN email) {
         if (playerOne.isEmpty()) {
             playerOne = email.getEmail();
-
             return "Player1 connected > " + email.getEmail();
         } else if (playerTwo.isEmpty()) {
             playerTwo = email.getEmail();
@@ -49,29 +48,28 @@ public class WSGameController {
 
     @MessageMapping("/playGame")
     @SendTo("/topic/gameStatus")
-    public GameBoardOUT answerMessage(PlayerIN message) throws Exception {
+    public GameOut answerMessage(PlayerIN message) throws Exception {
         System.out.println("started playing game.");
+        System.out.println(currentBoard);
         if (gameInProgress) {
             if (message.getEmail().equals(playerOne) && playerTurn == 1) {
                 addMoveToBoard(message.getMove(), PLAYER_ONE_SYMBOL);
                 playerTurn = 2;
                 if (isTheGameWon(PLAYER_ONE_SYMBOL)) {
-                    currentBoard.set(0, "win_playerOne");
                     endGame(message);
-                    return new GameBoardOUT(currentBoard, true, playerOne);
+                    return new GameOut(currentBoard, true, playerOne);
                 }
             } else if (message.getEmail().equals(playerTwo) && playerTurn == 2) {
                 addMoveToBoard(message.getMove(), PLAYER_TWO_SYMBOL);
                 playerTurn = 1;
                 if (isTheGameWon(PLAYER_TWO_SYMBOL)) {
-                    currentBoard.set(0, "win_playerTwo");
                     endGame(message);
-                    return new GameBoardOUT(currentBoard, true, playerOne);
+                    return new GameOut(currentBoard, true, playerOne);
                 }
             }
         }
 
-        return new GameBoardOUT(currentBoard, false, "");
+        return new GameOut(currentBoard, false, "");
     }
 
     private boolean isTheGameWon(String symbol) {
