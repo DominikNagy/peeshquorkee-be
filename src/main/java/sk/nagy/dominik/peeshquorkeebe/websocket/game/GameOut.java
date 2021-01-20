@@ -5,23 +5,20 @@ import java.util.List;
 public class GameOut {
     private boolean winner;
     private String winnerNick;
-    private List<String> gameBoard;
+    private Board gameBoard;
 
     public GameOut() {
     }
 
     public GameOut(List<String> gameBoard, boolean winner, String winnerNick) {
-        this.gameBoard = gameBoard;
+        this.gameBoard = new Board(gameBoard.get(0), gameBoard.get(1), gameBoard.get(2), gameBoard.get(3),
+                gameBoard.get(4), gameBoard.get(5), gameBoard.get(6), gameBoard.get(7), gameBoard.get(8));
         this.winner = winner;
         this.winnerNick = winnerNick;
     }
 
-    public List<String> getGameBoard() {
+    public Board getGameBoard() {
         return gameBoard;
-    }
-
-    public void setGameBoard(List<String> gameBoard) {
-        this.gameBoard = gameBoard;
     }
 
     public boolean isWinner() {
