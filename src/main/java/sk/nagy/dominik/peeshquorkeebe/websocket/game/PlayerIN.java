@@ -2,15 +2,13 @@ package sk.nagy.dominik.peeshquorkeebe.websocket.game;
 
 public class PlayerIN {
     private String nickname;
-    private String email;
     private String move;
 
     public PlayerIN() {
     }
 
-    public PlayerIN(String nickname, String email, String move) {
+    public PlayerIN(String nickname, String move) {
         this.nickname = nickname;
-        this.email = email;
         this.move = move;
     }
 
@@ -30,11 +28,4 @@ public class PlayerIN {
         this.nickname = nickname;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

@@ -21,16 +21,16 @@ public class WSGameController {
 
     @MessageMapping("/startGame")
     @SendTo("/topic/gameStatus")
-    public String answerWithClearBoard(PlayerIN email) {
+    public String answerWithClearBoard(PlayerIN nickname) {
         if (playerOne.isEmpty()) {
-            playerOne = email.getEmail();
-            return "Player1 connected > " + email.getEmail();
+            playerOne = nickname.getNickname();
+            return "Player1 connected > " + nickname.getNickname();
         } else if (playerTwo.isEmpty()) {
-            playerTwo = email.getEmail();
+            playerTwo = nickname.getNickname();
             initializeBoard();
             gameInProgress = true;
             System.out.println("A new game started!");
-            return "Player2 connected > " + email.getEmail() + " < game is started.";
+            return "Player2 connected > " + nickname.getNickname() + " < game is started.";
         } else
             return "Game already in progress";
     }
@@ -54,7 +54,7 @@ public class WSGameController {
         System.out.println("started playing game.");
         System.out.println(currentBoard);
         if (gameInProgress) {
-            if (message.getEmail().equals(playerOne) && playerTurn == 1) {
+            if (message.getNickname().equals(playerOne) && playerTurn == 1) {
                 addMoveToBoard(message.getMove(), PLAYER_ONE_SYMBOL);
                 playerTurn = 2;
                 if (isTheGameWon(PLAYER_ONE_SYMBOL)) {
@@ -65,7 +65,7 @@ public class WSGameController {
                     endGame(message);
                     return new GameOut(winningBoard, true, winnerNick);
                 }
-            } else if (message.getEmail().equals(playerTwo) && playerTurn == 2) {
+            } else if (message.getNickname().equals(playerTwo) && playerTurn == 2) {
                 addMoveToBoard(message.getMove(), PLAYER_TWO_SYMBOL);
                 playerTurn = 1;
                 if (isTheGameWon(PLAYER_TWO_SYMBOL)) {
