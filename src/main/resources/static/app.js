@@ -1,55 +1,18 @@
-var ws;
-function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
-}
+var socket = new SockJS('/secured/room');
+var stompClient = Stomp.over(socket);
+var sessionId = "";
 
-function connect() {
-    //connect to stomp where stomp endpoint is exposed
-    var socket = new WebSocket("ws://localhost:42069/game");
-    ws = Stomp.over(socket);
+stompClient.connect({}, function (frame) {
+    var url = stompClient.ws._transport.url;
+    url = url.replace(
+        "ws://localhost:42069/app/secured/room/",  "");
+    url = url.replace("/websocket", "");
+    url = url.replace(/^[0-9]+\//, "");
+    console.log("Your current session is: " + url);
+    sessionId = url;
+});
 
-    //usernaeme and password
-    ws.connect({}, function(frame){
-
-        ws.subscribe("/topic/reply", function(msg) {
-            alert(msg);
-            showGreeting(msg.body);
-        });
-
-        setConnected(true);
-    });
-}
-
-function disconnect() {
-    if (ws != null) {
-        ws.close();
-    }
-    setConnected(false);
-    console.log("Disconnected");
-}
-
-function sendName() {
-    var data = JSON.stringify({'name': $("#name").val()})
-    ws.send("/app/message", {},data);
-}
-
-function showGreeting(message) {
-    $("#greetings").append(" " + message + "");
-}
-
-$(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+stompClient.subscribe('secured/user/queue/specific-user'
+    + '-user' + that.sessionId, function (msgOut) {
+    //handle messages
 });

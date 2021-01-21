@@ -10,6 +10,8 @@ import java.util.List;
 @Controller
 public class WSGameController {
     List<String> currentBoard = new ArrayList<>();
+    List<String> winningBoard = new ArrayList<>();
+    String winnerNick = "";
     String playerOne = "";
     String playerTwo = "";
     boolean gameInProgress = false;
@@ -56,15 +58,23 @@ public class WSGameController {
                 addMoveToBoard(message.getMove(), PLAYER_ONE_SYMBOL);
                 playerTurn = 2;
                 if (isTheGameWon(PLAYER_ONE_SYMBOL)) {
+                    System.out.println("win 1");
+                    winningBoard.addAll(currentBoard);
+                    winnerNick = playerOne;
+                    System.out.println(winnerNick + "has win the game!");
                     endGame(message);
-                    return new GameOut(currentBoard, true, playerOne);
+                    return new GameOut(winningBoard, true, winnerNick);
                 }
             } else if (message.getEmail().equals(playerTwo) && playerTurn == 2) {
                 addMoveToBoard(message.getMove(), PLAYER_TWO_SYMBOL);
                 playerTurn = 1;
                 if (isTheGameWon(PLAYER_TWO_SYMBOL)) {
+                    System.out.println("win 2");
+                    winningBoard.addAll(currentBoard);
+                    winnerNick = playerTwo;
+                    System.out.println(winnerNick+ "has win the game!");
                     endGame(message);
-                    return new GameOut(currentBoard, true, playerOne);
+                    return new GameOut(winningBoard, true, winnerNick);
                 }
             }
         }
@@ -87,7 +97,11 @@ public class WSGameController {
             return true;
         } else if (currentBoard.get(0).equals(symbol) && currentBoard.get(4).equals(symbol) && currentBoard.get(8).equals(symbol)) {
             return true;
-        } else return currentBoard.get(2).equals(symbol) && currentBoard.get(4).equals(symbol) && currentBoard.get(6).equals(symbol);
+        } else if (currentBoard.get(2).equals(symbol) && currentBoard.get(4).equals(symbol) && currentBoard.get(6).equals(symbol)) {
+            return true;
+        } else
+            System.out.println("No winning pos!");
+            return false;
     }
 
     private void addMoveToBoard(String move, String symbol) {
