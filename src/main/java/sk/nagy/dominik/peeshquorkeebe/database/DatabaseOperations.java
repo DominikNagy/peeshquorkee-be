@@ -6,6 +6,7 @@ import sk.nagy.dominik.peeshquorkeebe.restapi.login.UserLoginRequest;
 import sk.nagy.dominik.peeshquorkeebe.restapi.login.UserLoginResponse;
 import sk.nagy.dominik.peeshquorkeebe.restapi.register.UserRegisterRequest;
 import sk.nagy.dominik.peeshquorkeebe.restapi.register.UserRegisterResponse;
+import sk.nagy.dominik.peeshquorkeebe.restapi.user.User;
 
 import java.sql.*;
 
@@ -157,5 +158,60 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
                 return new UserRegisterResponse("Something went wrong.");
             }
         }
+    }
+
+
+    // GET (/user)
+    // in: email
+    // out: *
+    @Override
+    public User getUser(String email) {
+        String select = "select * from users where email = '" +email+ "'";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(select);
+            if (resultSet.next()) {
+                connection.close();
+                return new User(resultSet.getInt("id"), resultSet.getString("nickname"),
+                        resultSet.getString("email"), resultSet.getString("password"),
+                        resultSet.getBytes("avatar"), resultSet.getTimestamp("createdat"),
+                        resultSet.getTimestamp("updatedat"));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public User[] getAllUsers() {
+        String select = "select * from users";
+
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(select,
+                    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.last();
+
+            // getRow gets the number of rows
+            User[] users = new User[resultSet.getRow()];
+            resultSet.beforeFirst();
+            int i = 0;
+            while (resultSet.next()) {
+                users[i] = new User(resultSet.getInt("id"), resultSet.getString("nickname"),
+                        resultSet.getString("email"), resultSet.getString("password"),
+                        resultSet.getBytes("avatar"), resultSet.getTimestamp("createdat"),
+                        resultSet.getTimestamp("updatedat"));
+                i += 1;
+            }
+            connection.close();
+            return users;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return null;
     }
 }

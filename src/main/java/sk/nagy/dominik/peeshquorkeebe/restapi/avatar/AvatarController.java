@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AvatarController {
 
     @CrossOrigin(originPatterns = "*")
-    @GetMapping(path = "/avatarGallery")
+    @GetMapping(path = "/avatarGallery", produces = "application/json")
     public AvatarGallery ImageController() {
 
         return new AvatarGallery();
