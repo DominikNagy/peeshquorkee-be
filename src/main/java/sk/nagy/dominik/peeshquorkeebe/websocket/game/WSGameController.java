@@ -4,6 +4,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import sk.nagy.dominik.peeshquorkeebe.database.DatabaseOperations;
+import sk.nagy.dominik.peeshquorkeebe.restapi.connections.ConnectedUsers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,6 @@ public class WSGameController {
     @MessageMapping("/playGame")
     @SendTo("/topic/gameStatus")
     public GameOut answerMessage(PlayerIN message) throws Exception {
-        System.out.println("started playing game.");
         if (gameInProgress) {
             if (message.getNickname().equals(playerOne) && playerTurn == 1) {
                 addMoveToBoard(message.getMove(), PLAYER_ONE_SYMBOL);
