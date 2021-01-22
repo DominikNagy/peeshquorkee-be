@@ -3,20 +3,22 @@ package sk.nagy.dominik.peeshquorkeebe.restapi.login;
 // REST API user-login-response
 // from db
 
+import java.util.Base64;
+
 public class UserLoginResponse {
     // not a response from db (Registered, Not Registered)
     private String user;
     private String userId;
     private String nickname;
     private String email;
-    private String avatar;
+    private byte[] avatar;
 
-    public UserLoginResponse(String user, String userId, String nickname, String email, String avatar) {
+    public UserLoginResponse(String user, String userId, String nickname, String email, byte[] avatar) {
         this.user = user;
         this.userId = userId;
         this.nickname = nickname;
         this.email = email;
-        this.avatar = avatar;
+        this.avatar = Base64.getDecoder().decode(avatar);
     }
 
     public UserLoginResponse(String user) {
@@ -55,11 +57,11 @@ public class UserLoginResponse {
         this.email = email;
     }
 
-    public String getAvatar() {
+    public byte[] getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
 }
