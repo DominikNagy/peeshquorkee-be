@@ -11,7 +11,7 @@ import java.util.List;
 @Controller
 public class WSGameController {
     List<String> currentBoard = new ArrayList<>();
-    List<String> winningBoard = new ArrayList<>();
+    List<String> endBoard = new ArrayList<>();
     String winnerNick = "";
     String playerOne = "";
     String playerTwo = "";
@@ -53,41 +53,62 @@ public class WSGameController {
     @SendTo("/topic/gameStatus")
     public GameOut answerMessage(PlayerIN message) throws Exception {
         System.out.println("started playing game.");
-        System.out.println(currentBoard);
         if (gameInProgress) {
             if (message.getNickname().equals(playerOne) && playerTurn == 1) {
                 addMoveToBoard(message.getMove(), PLAYER_ONE_SYMBOL);
                 playerTurn = 2;
                 if (isTheGameWon(PLAYER_ONE_SYMBOL)) {
                     System.out.println("win 1");
-                    winningBoard.addAll(currentBoard);
+                    endBoard.addAll(currentBoard);
                     winnerNick = playerOne;
-                    System.out.println(winnerNick + "has win the game!");
-                    addGameResultToDatabase(playerOne, playerTwo, winningBoard.toString());
+                    System.out.println(winnerNick + " has win the game!");
+                    addGameResultToDatabase(playerOne, playerTwo, endBoard.toString());
                     endGame(message);
-                    return new GameOut(winningBoard, true, winnerNick);
+                    return new GameOut(endBoard, true, false, winnerNick);
+                } else if (isTheGameDraw()) {
+                    System.out.println("draw");
+                    endBoard.addAll(currentBoard);
+                    addGameResultToDatabase(playerOne, playerTwo, endBoard.toString());
+                    endGame(message);
+                    return new GameOut(endBoard, false, true, "draw");
                 }
             } else if (message.getNickname().equals(playerTwo) && playerTurn == 2) {
                 addMoveToBoard(message.getMove(), PLAYER_TWO_SYMBOL);
                 playerTurn = 1;
                 if (isTheGameWon(PLAYER_TWO_SYMBOL)) {
                     System.out.println("win 2");
-                    winningBoard.addAll(currentBoard);
+                    endBoard.addAll(currentBoard);
                     winnerNick = playerTwo;
-                    System.out.println(winnerNick+ "has win the game!");
-                    addGameResultToDatabase(playerOne, playerTwo, winningBoard.toString());
+                    System.out.println(winnerNick+ " has win the game!");
+                    addGameResultToDatabase(playerOne, playerTwo, endBoard.toString());
                     endGame(message);
-                    return new GameOut(winningBoard, true, winnerNick);
+                    return new GameOut(endBoard, true, false, winnerNick);
+                } else if (isTheGameDraw()) {
+                    System.out.println("draw");
+                    endBoard.addAll(currentBoard);
+                    addGameResultToDatabase(playerOne, playerTwo, endBoard.toString());
+                    endGame(message);
+                    return new GameOut(endBoard, false, true, "draw");
                 }
             }
         }
 
-        return new GameOut(currentBoard, false, "");
+        return new GameOut(currentBoard, false, false, "");
     }
 
     private void addGameResultToDatabase(String playerOneNick, String playerTwoNick, String gameboard) {
         DatabaseOperations databaseOperations = new DatabaseOperations();
         databaseOperations.insertGameResult(new GameResult(playerOneNick, playerTwoNick, gameboard));
+    }
+
+    private boolean isTheGameDraw() {
+        for (String s : currentBoard) {
+            if (s.isEmpty()) {
+                System.out.println(currentBoard.toString());
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean isTheGameWon(String symbol) {
@@ -108,7 +129,6 @@ public class WSGameController {
         } else if (currentBoard.get(2).equals(symbol) && currentBoard.get(4).equals(symbol) && currentBoard.get(6).equals(symbol)) {
             return true;
         } else
-            System.out.println("No winning pos!");
             return false;
     }
 
