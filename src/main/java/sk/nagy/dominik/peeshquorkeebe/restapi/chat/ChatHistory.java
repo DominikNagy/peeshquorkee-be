@@ -8,12 +8,22 @@ public class ChatHistory {
     private String nickname;
     private String message;
     private String email;
+    private int avatar;
 
-    public ChatHistory(Timestamp timestamp, String nickname, String message, String email) {
+    public ChatHistory(Timestamp timestamp, String nickname, String message, String email, int avatar) {
         this.timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp);
         this.nickname = nickname;
         this.message = message;
         this.email = email;
+        this.avatar = avatar;
+    }
+
+    public int getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(int avatar) {
+        this.avatar = avatar;
     }
 
     public String getTimestamp() {

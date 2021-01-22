@@ -14,6 +14,4 @@ public class GameResultController {
         DatabaseOperations databaseOperations = new DatabaseOperations();
         return databaseOperations.getAllGames();
     }
-
-
 }

@@ -102,7 +102,8 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
                     resultSet.getTimestamp("timestamp"),
                     resultSet.getString("nickname"),
                     resultSet.getString("message"),
-                    resultSet.getString("email"));
+                    resultSet.getString("email"),
+                    resultSet.getInt("avatar"));
             i += 1;
         }
 
