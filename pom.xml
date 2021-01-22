@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>sk.nagy.dominik</groupId>
 	<artifactId>peeshquorkee-be</artifactId>
-	<version>1.0.2-rc.8</version>
+	<version>1.0.2-rc.9</version>
 	<name>peeshquorkee-be</name>
 	<description>Demo project for Spring Boot</description>
 

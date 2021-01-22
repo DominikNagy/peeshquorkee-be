@@ -7,7 +7,7 @@ public class AnswerMessage {
     private String nickname;
     private String email;
     private LocalDateTime timestamp;
-    private String avatar;
+    private int avatar;
 
     public LocalDateTime getTimestamp() {
         return timestamp;
@@ -16,7 +16,7 @@ public class AnswerMessage {
     public AnswerMessage() {
     }
 
-    public AnswerMessage(String content, String nickname, String email, LocalDateTime timestamp, String avatar) {
+    public AnswerMessage(String content, String nickname, String email, LocalDateTime timestamp, int avatar) {
         this.content = content;
         this.nickname = nickname;
         this.email = email;
@@ -35,7 +35,7 @@ public class AnswerMessage {
         return email;
     }
 
-    public String getAvatar() {
+    public int getAvatar() {
         return avatar;
     }
 }

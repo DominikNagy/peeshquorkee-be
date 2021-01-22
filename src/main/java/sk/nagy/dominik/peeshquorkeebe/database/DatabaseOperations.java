@@ -31,7 +31,7 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
             if (resultSet.next()) {
                 connection.close();
                 return new UserLoginResponse("Registered", resultSet.getString("ID"),
-                        resultSet.getString("nickname"), resultSet.getString("email"), resultSet.getBytes("avatar"));
+                        resultSet.getString("nickname"), resultSet.getString("email"), resultSet.getInt("avatar"));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();

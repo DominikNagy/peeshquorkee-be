@@ -11,14 +11,14 @@ public class UserLoginResponse {
     private String userId;
     private String nickname;
     private String email;
-    private byte[] avatar;
+    private int avatar;
 
-    public UserLoginResponse(String user, String userId, String nickname, String email, byte[] avatar) {
+    public UserLoginResponse(String user, String userId, String nickname, String email, int avatar) {
         this.user = user;
         this.userId = userId;
         this.nickname = nickname;
         this.email = email;
-        this.avatar = Base64.getDecoder().decode(avatar);
+        this.avatar = avatar;
     }
 
     public UserLoginResponse(String user) {
@@ -57,11 +57,11 @@ public class UserLoginResponse {
         this.email = email;
     }
 
-    public byte[] getAvatar() {
+    public int getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(byte[] avatar) {
+    public void setAvatar(int avatar) {
         this.avatar = avatar;
     }
 }

@@ -35,6 +35,9 @@ public class AvatarGallery {
             this.avatars.add(reader.readLine());
             this.avatars.add(reader.readLine());
             this.avatars.add(reader.readLine());
+            this.avatars.add(reader.readLine());
+            this.avatars.add(reader.readLine());
+            this.avatars.add(reader.readLine());
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();

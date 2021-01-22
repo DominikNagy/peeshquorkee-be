@@ -4,9 +4,9 @@ public class UserRegisterRequest {
     private String nickname;
     private String email;
     private String password;
-    private String avatar;
+    private int avatar;
 
-    public UserRegisterRequest(String nickname, String email, String password, String avatar) {
+    public UserRegisterRequest(String nickname, String email, String password, int avatar) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
@@ -37,11 +37,11 @@ public class UserRegisterRequest {
         this.password = password;
     }
 
-    public String getAvatar() {
+    public int getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(int avatar) {
         this.avatar = avatar;
     }
 }

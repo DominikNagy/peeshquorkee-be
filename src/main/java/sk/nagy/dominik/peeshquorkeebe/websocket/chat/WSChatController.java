@@ -28,7 +28,7 @@ public class WSChatController {
         String newMessage = HtmlUtils.htmlEscape(message.getMessage());
         String nicknameOfSender = HtmlUtils.htmlEscape(message.getNickname());
         String emailOfSender = HtmlUtils.htmlEscape(message.getEmail());
-        String avatarOfSender = HtmlUtils.htmlEscape(message.getAvatar());
+        int avatarOfSender = message.getAvatar();
 
         DatabaseOperations databaseConnection = new DatabaseOperations();
         databaseConnection.chatMessageReceived(nicknameOfSender, newMessage, emailOfSender);
