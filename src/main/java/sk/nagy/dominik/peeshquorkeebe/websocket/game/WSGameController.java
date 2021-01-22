@@ -29,6 +29,7 @@ public class WSGameController {
         } else if (playerTwo.isEmpty()) {
             playerTwo = nickname.getNickname();
             initializeBoard();
+            endBoard.clear();
             gameInProgress = true;
             System.out.println("A new game started!");
             return "Player2 connected > " + nickname.getNickname() + " < game is started.";
