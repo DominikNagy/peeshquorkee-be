@@ -8,19 +8,19 @@ public class User {
     private String nickname;
     private String email;
     private String password;
-    private byte[] avatar;
+    private int avatar;
     private Timestamp createdat;
     private Timestamp updatedate;
 
     public User() {
     }
 
-    public User(int id, String nickname, String email, String password, byte[] avatar, Timestamp createdat, Timestamp updatedate) {
+    public User(int id, String nickname, String email, String password, int avatar, Timestamp createdat, Timestamp updatedate) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
-        this.avatar = Base64.getDecoder().decode(avatar);
+        this.avatar = avatar;
         this.createdat = createdat;
         this.updatedate = updatedate;
     }
@@ -41,7 +41,7 @@ public class User {
         return password;
     }
 
-    public byte[] getAvatar() {
+    public int getAvatar() {
         return avatar;
     }
 

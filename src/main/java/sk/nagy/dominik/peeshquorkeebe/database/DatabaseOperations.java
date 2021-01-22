@@ -174,7 +174,7 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
                 connection.close();
                 return new User(resultSet.getInt("id"), resultSet.getString("nickname"),
                         resultSet.getString("email"), resultSet.getString("password"),
-                        resultSet.getBytes("avatar"), resultSet.getTimestamp("createdat"),
+                        resultSet.getInt("avatar"), resultSet.getTimestamp("createdat"),
                         resultSet.getTimestamp("updatedat"));
             }
 
@@ -202,7 +202,7 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
             while (resultSet.next()) {
                 users[i] = new User(resultSet.getInt("id"), resultSet.getString("nickname"),
                         resultSet.getString("email"), resultSet.getString("password"),
-                        resultSet.getBytes("avatar"), resultSet.getTimestamp("createdat"),
+                        resultSet.getInt("avatar"), resultSet.getTimestamp("createdat"),
                         resultSet.getTimestamp("updatedat"));
                 i += 1;
             }
