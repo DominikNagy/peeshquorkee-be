@@ -7,6 +7,9 @@ public class ChatHistoryRequest {
         this.timestamp = timestamp;
     }
 
+    public ChatHistoryRequest() {
+    }
+
     public String getTimestamp() {
         return timestamp;
     }
