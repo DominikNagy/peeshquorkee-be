@@ -3,6 +3,7 @@ package sk.nagy.dominik.peeshquorkeebe.websocket.game;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import sk.nagy.dominik.peeshquorkeebe.database.DatabaseOperations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,7 @@ public class WSGameController {
                     winningBoard.addAll(currentBoard);
                     winnerNick = playerOne;
                     System.out.println(winnerNick + "has win the game!");
+                    addGameResultToDatabase(playerOne, playerTwo, winningBoard.toString());
                     endGame(message);
                     return new GameOut(winningBoard, true, winnerNick);
                 }
@@ -73,6 +75,7 @@ public class WSGameController {
                     winningBoard.addAll(currentBoard);
                     winnerNick = playerTwo;
                     System.out.println(winnerNick+ "has win the game!");
+                    addGameResultToDatabase(playerOne, playerTwo, winningBoard.toString());
                     endGame(message);
                     return new GameOut(winningBoard, true, winnerNick);
                 }
@@ -80,6 +83,11 @@ public class WSGameController {
         }
 
         return new GameOut(currentBoard, false, "");
+    }
+
+    private void addGameResultToDatabase(String playerOneNick, String playerTwoNick, String gameboard) {
+        DatabaseOperations databaseOperations = new DatabaseOperations();
+        databaseOperations.insertGameResult(new GameResult(playerOneNick, playerTwoNick, gameboard));
     }
 
     private boolean isTheGameWon(String symbol) {

@@ -3,20 +3,20 @@ package sk.nagy.dominik.peeshquorkeebe.restapi.chat;
 import java.sql.Timestamp;
 
 public class ChatHistoryRequest {
-    private Timestamp timestamp;
+    private String timestamp;
 
-    public ChatHistoryRequest(Timestamp timestamp) {
+    public ChatHistoryRequest(String timestamp) {
         this.timestamp = timestamp;
     }
 
     public ChatHistoryRequest() {
     }
 
-    public Timestamp getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 }

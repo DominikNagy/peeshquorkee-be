@@ -11,11 +11,14 @@ public class User {
     private int avatar;
     private Timestamp createdat;
     private Timestamp updatedate;
+    private int victories;
+    private int gamesPlayed;
 
     public User() {
     }
 
-    public User(int id, String nickname, String email, String password, int avatar, Timestamp createdat, Timestamp updatedate) {
+    public User(int id, String nickname, String email, String password, int avatar,
+                Timestamp createdat, Timestamp updatedate, int victories, int gamesPlayed) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
@@ -23,6 +26,16 @@ public class User {
         this.avatar = avatar;
         this.createdat = createdat;
         this.updatedate = updatedate;
+        this.victories = victories;
+        this.gamesPlayed = gamesPlayed;
+    }
+
+    public int getVictories() {
+        return victories;
+    }
+
+    public int getGamesPlayed() {
+        return gamesPlayed;
     }
 
     public int getId() {

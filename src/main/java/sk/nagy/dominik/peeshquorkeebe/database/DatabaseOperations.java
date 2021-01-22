@@ -2,6 +2,8 @@ package sk.nagy.dominik.peeshquorkeebe.database;
 
 import sk.nagy.dominik.peeshquorkeebe.restapi.chat.ChatHistory;
 import sk.nagy.dominik.peeshquorkeebe.restapi.chat.ChatMessageReceived;
+import sk.nagy.dominik.peeshquorkeebe.restapi.game.GamesResponse;
+import sk.nagy.dominik.peeshquorkeebe.websocket.game.GameResult;
 import sk.nagy.dominik.peeshquorkeebe.restapi.login.UserLoginRequest;
 import sk.nagy.dominik.peeshquorkeebe.restapi.login.UserLoginResponse;
 import sk.nagy.dominik.peeshquorkeebe.restapi.register.UserRegisterRequest;
@@ -45,10 +47,10 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
     }
 
     @Override
-    public ChatHistory[] lastTenMessages(Timestamp timestamp) {
+    public ChatHistory[] lastTenMessages(String timestamp) {
         String select = "SELECT chat.timestamp, chat.nickname, chat.email, chat.message, avatar\n" +
                 "FROM chat INNER JOIN users u on chat.email = u.email\n" +
-                "WHERE chat.timestamp < to_timestamp('" +timestamp.toString()+ "', 'YYYY-MM-DD HH24:MI:SS')\n" +
+                "WHERE chat.timestamp < to_timestamp('" +timestamp+ "', 'YYYY-MM-DD HH24:MI:SS')\n" +
                 "ORDER BY timestamp DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY";
 
         try {
@@ -175,7 +177,8 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
                 return new User(resultSet.getInt("id"), resultSet.getString("nickname"),
                         resultSet.getString("email"), resultSet.getString("password"),
                         resultSet.getInt("avatar"), resultSet.getTimestamp("createdat"),
-                        resultSet.getTimestamp("updatedat"));
+                        resultSet.getTimestamp("updatedat"), resultSet.getInt("victories"),
+                        resultSet.getInt("gamesplayed"));
             }
 
         } catch (SQLException throwables) {
@@ -203,7 +206,8 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
                 users[i] = new User(resultSet.getInt("id"), resultSet.getString("nickname"),
                         resultSet.getString("email"), resultSet.getString("password"),
                         resultSet.getInt("avatar"), resultSet.getTimestamp("createdat"),
-                        resultSet.getTimestamp("updatedat"));
+                        resultSet.getTimestamp("updatedat"), resultSet.getInt("victories"),
+                        resultSet.getInt("gamesplayed"));
                 i += 1;
             }
             connection.close();
@@ -213,5 +217,30 @@ public class DatabaseOperations extends DatabaseConnection implements IDatabaseO
         }
 
         return null;
+    }
+
+    @Override
+    public void insertGameResult(GameResult gameResult) {
+        String insert = "INSERT INTO games (playeronenick, playertwonick, gameboard) " +
+                "VALUES ('" +gameResult.getPlayerOneNick()+ "', '" +gameResult.getPlayerTwoNick()+ "', '"
+                +gameResult.getGameboard()+ "')";
+
+        try {
+            Statement statement = connection.createStatement();
+            int resultSet = statement.executeUpdate(insert);
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    @Override
+    public GamesResponse getGame(String playerNick) {
+        return null;
+    }
+
+    @Override
+    public GamesResponse[] getAllGames() {
+        return new GamesResponse[0];
     }
 }
